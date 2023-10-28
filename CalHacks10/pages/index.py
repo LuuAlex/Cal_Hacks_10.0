@@ -53,7 +53,11 @@ def submit() -> rx.Component:
     return rx.box(
         rx.button(
             "Submit",
-            on_click=rx.redirect("/suggestion")
+            on_click=submitMerge()
         )
     )
+
+def submitMerge():
+    rx.redirect("/suggestion")
+    return State.merge()
     

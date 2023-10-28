@@ -6,8 +6,8 @@ import reflex as rx
 @rx.page(route="/suggestion", title="Suggestion")
 def dashboard() -> rx.Component:
     
-    State.merge
-    State.answer
+    
+    State.answer()
 
     return rx.container(
         rx.box(
