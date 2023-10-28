@@ -4,6 +4,9 @@ from typing import List
 
 import reflex as rx
 
+#class SelectState(rx.State):
+#    option: str = "No selection yet."
+
 hour_options: List[str] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
 minute_options: List[str] = []
 for i in range(0,59):
@@ -13,16 +16,16 @@ for i in range(0,59):
 def index() -> rx.Component:
     questions = [
         (
-            "Please input the city and state you are in."
+            "What city and state you are in?"
         ),
         (
-           "What is the time period you plan to spend outside? Please put the first time."
+           "When do you plan to go outside?"
         ),
         (
-           "Please put in the second time."
+           "When do you plan to come back?"
         ),
         (
-           "What are the activities you plan to do?"
+           "What are the activities you plan to do during this time?"
         ),
         (
            "What are the clothes you currently have in your wardrobe?"
@@ -33,18 +36,20 @@ def index() -> rx.Component:
         title(),
         dark_mode(),
         instruction(),
-        input_bar("\nEnter location in city, state format\n", State.location, State.set_location, questions[0]),
-        input_bar("\nEnter first time in terms of a 24 hour clock\n", State.time_period1, State.set_time_period1, questions[1]),
-        input_bar("\nEnter second time in terms of a 24 hour clock\n", State.time_period2, State.set_time_period2, questions[2]),
-        input_bar("\nEnter activities, separated by commas\n", State.activity, State.set_activity, questions[3]),
-        input_bar("\nEnter clothes you have, separated by commas\n", State.clothes_preference, State.set_clothes_preference, questions[4]),
+        input_bar("Enter your location in city, state format (ex: Berkeley, CA.", State.location, State.set_location, questions[0]),
+        input_bar("Enter the time you plan to go outside (ex: 12:00).", State.time_period1, State.set_time_period1, questions[1]),
+        #dropdown(hour_options),
+        #dropdown(minute_options)
+        input_bar("Enter the time you plan to be back home.", State.time_period2, State.set_time_period2, questions[2]),
+        input_bar("\nEnter the activities you are planning for the day as a list.\n", State.activity, State.set_activity, questions[3]),
+        input_bar("\nEnter the clothes you currently own.\n", State.clothes_preference, State.set_clothes_preference, questions[4]),
         submit()
     )
 
 def title() -> rx.Component:
     return rx.text(
-        "Clothes Generator",
-        background_image="linear-gradient(271.68deg, #EE756A 0.75%, #756AEE 88.52%)",
+        "Fit Creator",
+        background_image="linear-gradient(271.68deg, #EE756A 10.75%, #756AEE 88.52%)",
         background_clip="text",
         font_weight="bold",
         font_size="4em",
@@ -53,32 +58,8 @@ def title() -> rx.Component:
 
 def instruction() -> rx.Component:
     return rx.box(
-        "I can help you figure out what clothes you should wear, but I need some information."
+        "Having trouble deciding what to wear today? Don't want to check the weather app? Fill out these questions to get a personalized fit!"
     )
-
-def chat() -> rx.Component:
-    questions = [
-        (
-            "I can help you figure out what clothes you should wear, but I need some information." + 
-            "Can you give the location you are in?"
-        ),
-        (
-           "What is the time period you plan to spend outside? Please put the first time."
-        ),
-        (
-           "Please put in the second time."
-        ),
-        (
-           "What are the activities you plan to do?"
-        ),
-        (
-           "What are the clothes you currently have in your wardrobe?"
-        ),
-    ]
-    return rx.box(
-        *[question for question in questions]
-    )
-
 
 def input_bar(placeholder, stateVar, changeVar, question) -> rx.Component:
     return rx.vstack(
@@ -97,7 +78,9 @@ def submit() -> rx.Component:
     return rx.box(
         rx.button(
             "Submit",
-            on_click=rx.redirect("/suggestion"), color = 'green'
+            on_click=rx.redirect("/suggestion"), 
+            color = 'green',
+            margin_y="1em"
         )
     )
 def dark_mode() -> rx.Component:
@@ -105,4 +88,11 @@ def dark_mode() -> rx.Component:
         rx.button(rx.icon(tag="moon"), on_click=rx.toggle_color_mode,)
     )
 
-    
+def dropdown(type):
+    return rx.vstack(
+        rx.select(
+            type,
+            on_change=State.set_option,
+            color_schemes="twitter",
+        ),
+    )
