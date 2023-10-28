@@ -81,4 +81,5 @@ class LLM():
         image = base64.b64decode(image["image_base64"])
         decoded_string = io.BytesIO(image)
         img = Image.open(decoded_string)
-        return prompt, img #decoded_string #img.show()
+        w_out = [(k, v) for k, v in wd.items()]
+        return w_out, prompt, img #decoded_string #img.show()

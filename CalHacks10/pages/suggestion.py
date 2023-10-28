@@ -14,5 +14,9 @@ def dashboard() -> rx.Component:
         ),
         rx.box(
             State.output
+        ),
+        rx.box(
+            
+            State.weather
         )
     )

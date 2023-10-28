@@ -16,6 +16,15 @@ def index() -> rx.Component:
         submit()
     )
 
+def title() -> rx.Component:
+    rx.text(
+        "Clothes Generatior",
+        background_image="linear-gradient(271.68deg, #EE756A 0.75%, #756AEE 88.52%)",
+        background_clip="text",
+        font_weight="bold",
+        font_size="2em",
+    )
+
 def chat() -> rx.Component:
     questions = [
         (
@@ -55,6 +64,10 @@ def submit() -> rx.Component:
             "Submit",
             on_click=rx.redirect("/suggestion"), color = 'green'
         )
+    )
+def dark_mode() -> rx.Component:
+    return rx.box(
+        rx.button(rx.icon(tag="moon"), on_click=rx.toggle_color_mode,)
     )
 
     
