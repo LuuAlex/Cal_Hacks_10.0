@@ -20,7 +20,7 @@ class State(rx.State):
     image = ""
     weather: list[tuple[str, tuple]] = []
 
-    def create_time(hours, mins, ampm):
+    def create_time(self, hours, mins, ampm):
         hours = int(hours)
         mins = int(mins)
 
