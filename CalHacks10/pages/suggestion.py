@@ -16,7 +16,27 @@ def dashboard() -> rx.Component:
             State.output
         ),
         rx.box(
+            rx.cond(
+                weatherShow(State.weather),
+                rx.grid(
+                  rx.foreach(
+                    State.weather,
+                    weatherDisplay
+                  )
+                )
+                
+            )
             
-            State.weather
         )
     )
+
+def weatherShow(value):
+    return value != []
+
+def weatherDisplay(data):
+    return rx.grid_item(
+        f'Time: {data[0]} ',
+        f'{data[1][0]} {data[1][1]} ',
+        f'{data[1][2]} {data[1][3]} ',
+    )
+

@@ -82,4 +82,5 @@ class LLM():
         decoded_string = io.BytesIO(image)
         img = Image.open(decoded_string)
         w_out = [(k, v) for k, v in wd.items()]
+        print(w_out) # TODO: remove
         return w_out, prompt, img #decoded_string #img.show()
