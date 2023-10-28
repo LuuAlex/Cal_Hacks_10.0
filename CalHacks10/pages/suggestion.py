@@ -4,68 +4,87 @@ import asyncio
 
 @rx.page(route="/suggestion", title="Suggestion")
 def dashboard() -> rx.Component:
-    r = [rx.foreach(State.weather,weatherDisplay)]
     return rx.container(
         rx.card(
-            back(),
+            rx.hstack(
+              back(),
+              rx.spacer(),
+              dark_mode(),  
+            ),
             margin = "8px"
         ),
         rx.card(
-            rx.image(
-                src=State.image,
-                width='370px',
-                height='370px',
-                marginLeft='auto',
-                marginRight='auto'
-            ),
+            rx.hstack(
+                rx.cond(
+                  ~State.loading_screen,
+                  rx.image(
+                          src=State.image,
+                          width='370px',
+                          height='370px',
+                          marginLeft='auto',
+                          marginRight='auto'
+                      ),
+                ),
+                rx.cond(
+                  State.loading_screen,
+                  rx.circular_progress(
+                      rx.circular_progress_label(
+                          "Loading", color="rgb(107,99,246)",
+                          font_size="30px"
+                      ),
+                      size="370px",
+                      thickness="5px",
+                      is_indeterminate=True,
+                      marginLeft='auto',
+                      marginRight='auto',
+                  ),
+                ),
             margin='8px',
+            )
         ),
-        rx.card(
-            rx.box(
-                State.output
+        rx.cond(
+          ~State.loading_screen,
+          rx.container(
+            rx.card(
+                rx.box(
+                    State.output
+                ),
+                margin='8px',
+                maxWidth="70em",
             ),
-            margin='8px',
-        ),
-        rx.card(
-            rx.cond(
-                weatherShow(State.weather),
-                rx.grid(
-                  rx.foreach(
-                    State.weather,
-                    weatherDisplay
-                  )
+            rx.card(
+                rx.cond(
+                  weatherShow(State.weather),
+                    rx.table_container(
+                        rx.table(
+                            headers=["Time", "Temperature (F)", "Description"],
+                            rows = State.new_weather,
+                            variant="striped"
+                        )
+                    )
                 )
             ),
             margin='8px',
-        )
+            maxWidth="70em",
+          ),
+        ),
+        maxWidth="70em",
     )
 def weatherShow(value):
     return value != []
 
-def weatherDisplay(data):
-    return rx.table_container(
-        rx.table(
-            headers=["Name", "Age", "Location"],
-            rows=[
-                ("John", 30, "New York"),
-                ("Jane", 31, "San Francisco"),
-                ("Joe", 32, "Los Angeles"),
-            ],
-            footers=["Footer 1", "Footer 2", "Footer 3"],
-            variant="striped",
-        )
-    )
-    #return rx.grid_item(
-    #    f'Time: {data[0]} ',
-    #    f'{data[1][0]} {data[1][1]} ',
-    #    f'{data[1][2]} {data[1][3]} ',)
 def back() -> rx.Component:
     return rx.box(
         rx.button(
-            "<- Try a new input",
-            width = '100%',
+            chr(2190)+" Try a new input",
+            on_mouse_up=State.load,
             on_click=rx.redirect("/"), 
             color = 'green',
-            #margin_y="1em"
+            align="left",
+            width = '100%',
         )
+    )
+def dark_mode() -> rx.Component:
+    return rx.box(
+        rx.button(rx.icon(tag="moon"), on_click=rx.toggle_color_mode,)
     )

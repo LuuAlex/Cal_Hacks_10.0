@@ -4,11 +4,11 @@ import base64
 import requests
 import io
 from PIL import Image                                                                                                                                                                                                                                      
-
+import datetime
 
 class LLM():
     f = open("CalHacks10/api_key.txt", "r").read()
-    together.api_key = f     
+    together.api_key = f
 
     async def getweather(city, start_hr, end_hr):
         # declare the client. the measuring unit used defaults to the metric system (celcius, km/h, etc.)
@@ -21,7 +21,7 @@ class LLM():
             # hourly forecasts
             elapsed = {}
             for hourly in forecast.hourly:
-                if hourly.time >= start_hr and hourly.time <= end_hr:
+                if hourly.time.hour >= start_hr.hour - 3 and hourly.time.hour <= end_hr.hour + 3:
                     elapsed[str(hourly.time)] = ("Temperature:", hourly.temperature, "Weather description:", hourly.description, str(hourly.kind))
         
         return elapsed
