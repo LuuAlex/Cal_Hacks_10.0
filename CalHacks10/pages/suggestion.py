@@ -10,18 +10,21 @@ def dashboard() -> rx.Component:
             back(),
             margin = "8px"
         ),
-        rx.button(
-            on_click=State.answer
-        ),
         rx.card(
             rx.image(
-                src=State.image
-            )
+                src=State.image,
+                width='370px',
+                height='370px',
+                marginLeft='auto',
+                marginRight='auto'
+            ),
+            margin='8px',
         ),
         rx.card(
             rx.box(
                 State.output
-            )
+            ),
+            margin='8px',
         ),
         rx.card(
             rx.cond(
@@ -32,7 +35,8 @@ def dashboard() -> rx.Component:
                     weatherDisplay
                   )
                 )
-            )
+            ),
+            margin='8px',
         )
     )
 def weatherShow(value):
