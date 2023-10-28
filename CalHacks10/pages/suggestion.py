@@ -76,7 +76,7 @@ def weatherShow(value):
 def back() -> rx.Component:
     return rx.box(
         rx.button(
-            chr(2190)+" Try a new input",
+            "← Try a new input",
             on_mouse_up=State.load,
             on_click=rx.redirect("/"), 
             color = 'green',

@@ -69,7 +69,18 @@ class State(rx.State):
       data = self.weather
       for item in data:
           temp = []
-          temp.append(item[0])
+          AMPM = "AM"
+          hour = int(item[0][0:2])
+          min = item[0][3:5]
+          if hour > 12:
+              AMPM = "PM"
+              hour -= 12
+          if hour == 12:
+              AMPM = "PM"
+          if hour == 0:
+              hour = 12
+          new_time = f"{hour}:{min} {AMPM}"
+          temp.append(new_time)
           temp.append(item[1][1])
           temp.append(item[1][3])
           rv.append(tuple(temp))
