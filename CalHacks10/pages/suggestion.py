@@ -10,7 +10,7 @@ def dashboard() -> rx.Component:
             on_click=State.answer
         ),
         rx.image(
-            src="/generatedImage.png"
+            src=State.image
         ),
         rx.box(
             State.output

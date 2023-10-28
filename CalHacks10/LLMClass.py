@@ -1,15 +1,14 @@
 import python_weather
-import datetime
-import asyncio
-import os
 import together
 import base64
-import requests                                                                                                                                                                                                                                      
+import requests
+import io
+from PIL import Image                                                                                                                                                                                                                                      
 
 
 class LLM():
-    f = open("CalHacks10/api_key.txt", "r")
-    together.api_key = f.read()      
+    f = open("CalHacks10/api_key.txt", "r").read()
+    together.api_key = f     
 
     async def getweather(city, start_hr, end_hr):
         # declare the client. the measuring unit used defaults to the metric system (celcius, km/h, etc.)
@@ -55,33 +54,22 @@ class LLM():
     async def run_entire_llm(location, start_hr, end_hr, activity_description, clothes):
         url = "https://api.together.xyz/inference"                                                                                                                                                                                                           
         model = "stabilityai/stable-diffusion-xl-base-1.0"
-        f = open("CalHacks10/api_key.txt", "r")
-        together.api_key = f.read()
-
-        location = "New York"
-        start_hr = datetime.time(12, 0)
-        end_hr = datetime.time(6, 0)
-        activity_description = "hike, study"
-        clothes = "shorts, hoodie, tshirt"
-        start_hr = datetime.time(0, 0)
-        end_hr = datetime.time(12, 0)
         wd = await LLM.getweather(location, start_hr, end_hr)
         prompt = LLM.llm_text(wd, location, start_hr, end_hr, activity_description, clothes)
                                                                                                                                                                                                                                                             
         payload = {                                                                                                                                                                                                                                          
             "model": model,                                                                                                                                                                                                                                  
-            "prompt": prompt,                                                                                                                                                                                                                                
-            "results": 2,                                                                                                                                                                                                                               
-            "width": 1024,
-            "height": 1024,
-            "steps": 20,
-            "seed": 42,
-            #"negative_prompt": negative_prompt,
-        }                                                                                                                                                                                                                                                    
+             "prompt": prompt,                                                                                                                                                                                                                                
+             "results": 2,                                                                                                                                                                                                                               
+             "width": 1024,
+             "height": 1024,
+             "steps": 20,
+             "seed": 42,
+         }                                                                                                                                                                                                                                                    
         headers = {                                                                                                                                                                                                                                          
-            "accept": "application/json",                                                                                                                                                                                                                    
-            "content-type": "application/json",                                                                                                                                                                                                              
-            "Authorization": f"Bearer {f}"                                                                                                                                                                                     
+             "accept": "application/json",                                                                                                                                                                                                                    
+             "content-type": "application/json",                                                                                                                                                                                                              
+             "Authorization": f"Bearer {LLM.f}"                                                                                                                                                                                     
         }                                                                                                                                                                                                                                    
         response = requests.post(url, json=payload, headers=headers, stream=True)                                                                                                                                                                            
         response.raise_for_status()
@@ -90,6 +78,7 @@ class LLM():
                                                                                                                                                                                                                                                             
         # save the first image
         image = response_json["output"]["choices"][0]
-        with open("assets/generatedImage.png", "wb") as f:
-            f.write(base64.b64decode(image["image_base64"]))
-        return prompt
+        image = base64.b64decode(image["image_base64"])
+        decoded_string = io.BytesIO(image)
+        img = Image.open(decoded_string)
+        return prompt, img #decoded_string #img.show()
