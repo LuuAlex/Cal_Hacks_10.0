@@ -1,7 +1,7 @@
 """The home page of the app."""
 
-from Cal_Hacks_10.0 import styles
-from Cal_Hacks_10.0.templates import template
+from CalHacks10 import styles
+from CalHacks10.templates import template
 
 import reflex as rx
 

@@ -1,6 +1,6 @@
 """The settings page."""
 
-from Cal_Hacks_10.0.templates import template
+from CalHacks10.templates import template
 
 import reflex as rx
 

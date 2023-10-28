@@ -1,7 +1,7 @@
 """Sidebar component for the app."""
 
-from Cal_Hacks_10.0 import styles
-from Cal_Hacks_10.0.state import State
+from CalHacks10 import styles
+from CalHacks10.state import State
 
 import reflex as rx
 

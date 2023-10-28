@@ -1,9 +1,9 @@
 """Welcome to Reflex!."""
 
-from Cal_Hacks_10.0 import styles
+from CalHacks10 import styles
 
 # Import all the pages.
-from Cal_Hacks_10.0.pages import *
+from CalHacks10.pages import *
 
 import reflex as rx
 
