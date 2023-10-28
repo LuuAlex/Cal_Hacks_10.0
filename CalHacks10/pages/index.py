@@ -4,13 +4,11 @@ from typing import List
 
 import reflex as rx
 
-#class SelectState(rx.State):
-#    option: str = "No selection yet."
-
-hour_options: List[str] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-minute_options: List[str] = []
-for i in range(0,59):
+hour_options = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+minute_options = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09"]
+for i in range(10,60):
     minute_options.append(f"{i}")
+am_pm_options = ["AM", "PM"]
 
 @rx.page(route="/", title="Home", image="/github.svg")
 def index() -> rx.Component:
@@ -33,17 +31,41 @@ def index() -> rx.Component:
     ]
 
     return rx.container(
-        title(),
-        dark_mode(),
-        instruction(),
-        input_bar("Enter your location in city, state format (ex: Berkeley, CA.", State.location, State.set_location, questions[0]),
-        input_bar("Enter the time you plan to go outside (ex: 12:00).", State.time_period1, State.set_time_period1, questions[1]),
-        #dropdown(hour_options),
-        #dropdown(minute_options)
-        input_bar("Enter the time you plan to be back home.", State.time_period2, State.set_time_period2, questions[2]),
-        input_bar("\nEnter the activities you are planning for the day as a list.\n", State.activity, State.set_activity, questions[3]),
-        input_bar("\nEnter the clothes you currently own.\n", State.clothes_preference, State.set_clothes_preference, questions[4]),
-        submit()
+        rx.card(
+            rx.box(
+                rx.hstack(
+                    title(),
+                    rx.spacer(),
+                    dark_mode(),
+                    width="100%",
+                    align="right",
+                ),
+                rx.box(margin_y="1em"),
+                instruction(),
+            ),
+            margin="8px"
+        ),
+        rx.box(margin_y="1em"),
+        rx.card(
+            rx.box(
+                input_bar("Enter your location in city, state format (ex: Berkeley, CA).", State.location, State.set_location, questions[0]),
+                rx.box(margin_y="2em"),
+                time_input_bar([State.time_period1_hours, State.time_period1_mins, State.time_period1_ampm], [State.set_time_period1_hours, State.set_time_period1_mins, State.set_time_period1_ampm], questions[1]),
+                rx.box(margin_y="2em"),
+                time_input_bar([State.time_period2_hours, State.time_period2_mins, State.time_period2_ampm], [State.set_time_period2_hours, State.set_time_period2_mins, State.set_time_period2_ampm], questions[2]),
+                rx.box(margin_y="2em"),
+                input_bar("Enter the activities you are planning for the day as a list.", State.activity, State.set_activity, questions[3]),
+                rx.box(margin_y="2em"),
+                input_bar("Enter the clothes you currently own.", State.clothes_preference, State.set_clothes_preference, questions[4]),
+            ),
+            margin="8px"
+        ),
+        rx.box(margin_y="1em"),
+        rx.card(
+            submit(),
+            margin="8px"
+        ),
+        max_width="70em"
     )
 
 def title() -> rx.Component:
@@ -53,24 +75,47 @@ def title() -> rx.Component:
         background_clip="text",
         font_weight="bold",
         font_size="4em",
-        text_align="center"
+        text_align="center",
     )
 
 def instruction() -> rx.Component:
     return rx.box(
-        "Having trouble deciding what to wear today? Don't want to check the weather app? Fill out these questions to get a personalized fit!"
+        rx.text(
+            "Having trouble deciding what to wear today? Don't want to check the weather app? Fill out these questions to get a personalized fit!",
+            font_size="20px"
+        ),
     )
 
 def input_bar(placeholder, stateVar, changeVar, question) -> rx.Component:
-    return rx.vstack(
+    return rx.box(
         rx.box(
-            question,
-            margin_y="1em"
+            rx.text(
+                question,
+                font_size="18px"
+            ),
+            text_align="left",
+            
         ),
+        rx.box(margin_y="1em"),
         rx.input(
             value=stateVar,
             placeholder=placeholder,
             on_change=changeVar
+        )
+    )
+
+def time_input_bar(stateVar, changeVar, question) -> rx.Component:
+    return rx.box(
+        rx.text(
+            question,
+            font_size="18px"
+        ),
+        rx.box(margin_y="1em"),
+        rx.hstack(
+            rx.select(hour_options, on_change=changeVar[0], value=stateVar[0], placeholder="Hours"),
+            rx.box(":", margin_y="1em"),
+            rx.select(minute_options, on_change=changeVar[1], value=stateVar[1], placeholder="Minutes"),
+            rx.select(am_pm_options, on_change=changeVar[2], value=stateVar[2], placeholder="AM/PM")
         )
     )
 
@@ -79,20 +124,10 @@ def submit() -> rx.Component:
         rx.button(
             "Submit",
             on_click=rx.redirect("/suggestion"), 
-            color = 'green',
-            margin_y="1em"
+            color='light green',
         )
     )
 def dark_mode() -> rx.Component:
     return rx.box(
         rx.button(rx.icon(tag="moon"), on_click=rx.toggle_color_mode,)
-    )
-
-def dropdown(type):
-    return rx.vstack(
-        rx.select(
-            type,
-            on_change=State.set_option,
-            color_schemes="twitter",
-        ),
     )
