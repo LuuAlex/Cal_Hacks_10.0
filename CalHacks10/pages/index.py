@@ -78,7 +78,8 @@ def submit() -> rx.Component:
     return rx.box(
         rx.button(
             "Submit",
-            on_click=rx.redirect("/suggestion"), 
+            on_click=State.answer, 
+            on_mouse_up=rx.redirect("/suggestion"),
             color = 'green',
             margin_y="1em"
         )

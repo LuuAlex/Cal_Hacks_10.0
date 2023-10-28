@@ -61,8 +61,8 @@ class LLM():
             "model": model,                                                                                                                                                                                                                                  
              "prompt": prompt,                                                                                                                                                                                                                                
              "results": 2,                                                                                                                                                                                                                               
-             "width": 256,
-             "height": 256,
+             "width": 1024,
+             "height": 1024,
              "steps": 20,
              "seed": 42,
          }                                                                                                                                                                                                                                                    
