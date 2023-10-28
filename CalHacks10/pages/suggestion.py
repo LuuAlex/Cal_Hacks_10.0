@@ -4,8 +4,12 @@ import asyncio
 
 @rx.page(route="/suggestion", title="Suggestion")
 def dashboard() -> rx.Component:
-
+    r = [rx.foreach(State.weather,weatherDisplay)]
     return rx.container(
+        rx.card(
+            back(),
+            margin = "8px"
+        ),
         rx.button(
             on_click=State.answer
         ),
@@ -31,7 +35,6 @@ def dashboard() -> rx.Component:
             )
         )
     )
-
 def weatherShow(value):
     return value != []
 
@@ -52,5 +55,13 @@ def weatherDisplay(data):
     #    f'Time: {data[0]} ',
     #    f'{data[1][0]} {data[1][1]} ',
     #    f'{data[1][2]} {data[1][3]} ',)
-    
-
+def back() -> rx.Component:
+    return rx.box(
+        rx.button(
+            "<- Try a new input",
+            width = '100%',
+            on_click=rx.redirect("/"), 
+            color = 'green',
+            #margin_y="1em"
+        )
+    )
