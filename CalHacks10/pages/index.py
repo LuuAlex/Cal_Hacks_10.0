@@ -26,7 +26,7 @@ def index() -> rx.Component:
            "What are the activities you plan to do during this time?"
         ),
         (
-           "What are the clothes you currently have in your wardrobe?"
+           "What are some clothes that you'd like to wear today?"
         ),
     ]
 
@@ -70,8 +70,8 @@ def index() -> rx.Component:
 
 def title() -> rx.Component:
     return rx.text(
-        "Fit Creator",
-        background_image="linear-gradient(271.68deg, #EE756A 10.75%, #756AEE 88.52%)",
+        "DripAI",
+        background_image="linear-gradient(271.68deg, #FF1B6B 10.75%, #45CAFF 88.52%)",
         background_clip="text",
         font_weight="bold",
         font_size="4em",
